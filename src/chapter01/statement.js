@@ -1,6 +1,3 @@
-import invocies from "./invoices.json";
-import plays from "./plays.json";
-
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
@@ -47,3 +44,5 @@ function statement(invoice, plays) {
   result += `적립 포인트: ${volumeCredits}점\n`;
   return result;
 }
+
+module.exports = statement;
