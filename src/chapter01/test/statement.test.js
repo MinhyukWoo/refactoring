@@ -1,6 +1,6 @@
-const statement = require("../chapter01/statement");
-const invoices = require("../chapter01/invoices.json");
-const plays = require("../chapter01/plays.json");
+const statement = require("../statement");
+const invoices = require("../invoices.json");
+const plays = require("../plays.json");
 
 const output = `청구 내역 (고객명: BigCo)
   Hamlet: $650.00 (55석)
