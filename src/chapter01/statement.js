@@ -1,12 +1,9 @@
 function statement(invoice, plays) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
-  for (const perf of invoice.performances) {
-    volumeCredits += volumeCreditsFor(perf);
-  }
-  
+  let volumeCredits = totalVolumeCredits();
+
   for (const perf of invoice.performances) {
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
@@ -16,6 +13,14 @@ function statement(invoice, plays) {
   result += `총액: ${usd(totalAmount)}\n`;
   result += `적립 포인트: ${volumeCredits}점\n`;
   return result;
+
+  function totalVolumeCredits() {
+    let result = 0;
+    for (const perf of invoice.performances) {
+      result += volumeCreditsFor(perf);
+    }
+    return result;
+  }
 
   function usd(aNumber) {
     return new Intl.NumberFormat("en-US", {
@@ -31,7 +36,7 @@ function statement(invoice, plays) {
     if ("comedy" === playFor(aPerformance).type) {
       result += Math.floor(aPerformance.audience / 5);
     }
-    return result
+    return result;
   }
 
   function amountFor(aPerformance) {
