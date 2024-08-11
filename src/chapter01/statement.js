@@ -54,7 +54,10 @@ function statement(invoice, plays) {
   }
 
   function totalVolumeCredits(data) {
-    return data.performances.reduce((total, perf) => total + perf.volumeCredits, 0);
+    return data.performances.reduce(
+      (total, perf) => total + perf.volumeCredits,
+      0
+    );
   }
 }
 
@@ -66,14 +69,14 @@ function renderPlainText(plays, data) {
   result += `총액: ${usd(data.totalAmount)}\n`;
   result += `적립 포인트: ${data.totalVolumeCredits}점\n`;
   return result;
+}
 
-  function usd(aNumber) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(aNumber / 100);
-  }
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100);
 }
 
 module.exports = statement;
