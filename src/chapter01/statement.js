@@ -1,9 +1,11 @@
 function statement(invoice, plays) {
-  return renderPlainText(invoice, plays);
+  const statemetData = {};
+  statemetData.customer = invoice.customer;
+  return renderPlainText(invoice, plays, statemetData);
 }
 
-function renderPlainText(invoice, plays) {
-  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+function renderPlainText(invoice, plays, data) {
+  let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (const perf of invoice.performances) {
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
