@@ -1,14 +1,24 @@
 function statement(invoice, plays) {
   const statemetData = {};
   statemetData.customer = invoice.customer;
-  statemetData.performances = invoice.performances;
+  statemetData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(plays, statemetData);
+
+  function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance);
+    result.play = playFor(aPerformance);
+    return result;
+
+    function playFor(aPerformance) {
+      return plays[aPerformance.playID];
+    }
+  }
 }
 
 function renderPlainText(plays, data) {
   let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (const perf of data.performances) {
-    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+    result += `  ${perf.play.name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`;
   }
@@ -43,7 +53,7 @@ function renderPlainText(plays, data) {
   function volumeCreditsFor(aPerformance) {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === playFor(aPerformance).type) {
+    if ("comedy" === aPerformance.play.type) {
       result += Math.floor(aPerformance.audience / 5);
     }
     return result;
@@ -51,7 +61,7 @@ function renderPlainText(plays, data) {
 
   function amountFor(aPerformance) {
     let result = 0;
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case "tragedy":
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -66,13 +76,9 @@ function renderPlainText(plays, data) {
         result += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
+        throw new Error(`알 수 없는 장르: ${aPerformance.play.type}`);
     }
     return result;
-  }
-
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
   }
 }
 
