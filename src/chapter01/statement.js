@@ -4,7 +4,7 @@ function statement(invoice, plays) {
   statemetData.performances = invoice.performances.map(enrichPerformance);
   statemetData.totalAmount = totalAmount(statemetData);
   statemetData.totalVolumeCredits = totalVolumeCredits(statemetData);
-  return renderPlainText(plays, statemetData);
+  return renderPlainText(statemetData);
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance);
@@ -61,7 +61,7 @@ function statement(invoice, plays) {
   }
 }
 
-function renderPlainText(plays, data) {
+function renderPlainText(data) {
   let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (const perf of data.performances) {
     result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
