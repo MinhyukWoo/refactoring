@@ -2,7 +2,8 @@ function statement(invoice, plays) {
   const statemetData = {};
   statemetData.customer = invoice.customer;
   statemetData.performances = invoice.performances.map(enrichPerformance);
-  statemetData.totalAmount = totalAmount(statemetData)
+  statemetData.totalAmount = totalAmount(statemetData);
+  statemetData.totalVolumeCredits = totalVolumeCredits(statemetData);
   return renderPlainText(plays, statemetData);
 
   function enrichPerformance(aPerformance) {
@@ -55,6 +56,14 @@ function statement(invoice, plays) {
     }
     return result;
   }
+
+  function totalVolumeCredits(data) {
+    let result = 0;
+    for (const perf of data.performances) {
+      result += perf.volumeCredits;
+    }
+    return result;
+  }
 }
 
 function renderPlainText(plays, data) {
@@ -63,16 +72,8 @@ function renderPlainText(plays, data) {
     result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
   }
   result += `총액: ${usd(data.totalAmount)}\n`;
-  result += `적립 포인트: ${totalVolumeCredits()}점\n`;
+  result += `적립 포인트: ${data.totalVolumeCredits}점\n`;
   return result;
-
-  function totalVolumeCredits() {
-    let result = 0;
-    for (const perf of data.performances) {
-      result += perf.volumeCredits;
-    }
-    return result;
-  }
 
   function usd(aNumber) {
     return new Intl.NumberFormat("en-US", {
