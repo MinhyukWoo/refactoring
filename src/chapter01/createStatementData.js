@@ -7,7 +7,10 @@ module.exports = function createStatementData(invoice, plays) {
   return statemetData;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance))
+    const calculator = createPerformanceCalculator(
+      aPerformance,
+      playFor(aPerformance)
+    );
     const result = Object.assign({}, aPerformance);
     result.play = calculator.play;
     result.amount = calculator.amount;
@@ -17,7 +20,6 @@ module.exports = function createStatementData(invoice, plays) {
     function playFor(aPerformance) {
       return plays[aPerformance.playID];
     }
-
   }
 
   function totalAmount(data) {
@@ -32,13 +34,17 @@ module.exports = function createStatementData(invoice, plays) {
   }
 };
 
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay);
+}
+
 class PerformanceCalculator {
   constructor(aPerformance, aPlay) {
     this.performance = aPerformance;
     this.play = aPlay;
   }
 
-  get amount(){
+  get amount() {
     let result = 0;
     switch (this.play.type) {
       case "tragedy":
@@ -60,7 +66,7 @@ class PerformanceCalculator {
     return result;
   }
 
-  get volumeCredits () {
+  get volumeCredits() {
     let result = 0;
     result += Math.max(this.performance.audience - 30, 0);
     if ("comedy" === this.play.type) {
